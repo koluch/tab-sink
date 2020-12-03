@@ -1,0 +1,32 @@
+@import './reset.scss';
+
+body {
+  --color-gray: #ececec;
+  --color-gray-2: gray;
+  font-family: sans-serif;
+}
+
+.app {
+  display: grid;
+  padding: 1rem;
+}
+
+.tab {
+  &-body {
+    display: grid;
+    align-items: center;
+    padding: 0.25rem;
+    grid-template-columns: 1fr auto;
+
+    &:hover {
+      cursor: pointer;
+      background: var(--color-gray);
+    }
+  }
+
+  &-title {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+}

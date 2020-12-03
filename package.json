@@ -1,0 +1,51 @@
+{
+  "name": "tab-sink",
+  "version": "0.1.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "clean": "rm -rf ./build && rm -rf ./*.zip",
+    "all": "npx run-s -l",
+    "test:types": "tsc --noEmit",
+    "test": "npm run all test:*",
+    "build:prepare": "mkdir -p build",
+    "build:copy-assets": "cp -R src/static src/manifest.json LICENSE build",
+    "build:update-manifest": "VERSION=`node -p -e \"require('./package.json').version\"` && node scripts/update_manifest.js build/manifest.json $VERSION",
+    "build:compile-sass": "sass src/index.scss build/index.css --no-source-map",
+    "build:compile-ts": "esbuild src/index.tsx --define:process.env.NODE_ENV='\"production\"' --bundle --outfile=build/bundle.js",
+    "build:pack": "cd build && VERSION=`node -p -e \"require('./manifest.json').version\"` && zip -r ../tab-sink-${VERSION}.zip ./*",
+    "build": "npm run all clean build:*",
+    "util:fix": "npx eslint --fix --ext ts,tsx ./src/"
+  },
+  "author": "Nikolai Mavrenkov",
+  "license": "MIT",
+  "dependencies": {
+    "nanoid": "^3.1.20",
+    "preact": "^10.5.7"
+  },
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^4.9.0",
+    "@typescript-eslint/parser": "^4.9.0",
+    "esbuild": "^0.8.17",
+    "eslint": "^7.14.0",
+    "eslint-config-prettier": "^6.15.0",
+    "eslint-plugin-import": "^2.22.1",
+    "eslint-plugin-prettier": "^3.1.4",
+    "npm-run-all": "^4.1.5",
+    "prettier": "^2.2.1",
+    "sass": "^1.29.0",
+    "typescript": "^4.1.2",
+    "web-ext-types": "^3.2.1"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "npx lint-staged"
+    }
+  },
+  "lint-staged": {
+    "*.ts?(x)": [
+      "npx prettier --write",
+      "npx eslint --fix"
+    ]
+  }
+}

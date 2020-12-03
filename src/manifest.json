@@ -1,0 +1,21 @@
+{
+  "manifest_version": 2,
+  "name": "Tab-sink",
+  "description": "Extension to work with tabs",
+  "version": "debug",
+
+  "icons": {
+    "48": "/static/logo.svg"
+  },
+
+  "browser_action": {
+    "browser_style": true,
+    "default_title": "Sink all tabs"
+  },
+
+  "background": {
+    "scripts": ["/static/background.js"]
+  },
+
+  "permissions": ["storage", "tabs", "downloads", "<all_urls>"]
+}
