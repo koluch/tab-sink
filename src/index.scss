@@ -3,25 +3,65 @@
 body {
   --color-gray: #ececec;
   --color-gray-2: gray;
+  --color-gray-3: #cfcfcf;
   font-family: sans-serif;
+}
+
+button {
+  border: 1px solid var(--color-gray-3);
+  background: white;
+  padding: 0.2rem 0.8rem;
+  border-radius: 4px;
+  cursor: pointer;
 }
 
 .app {
   display: grid;
+  grid-gap: 1rem;
   padding: 1rem;
+
+  &-header {
+    display: flex;
+
+    > *:not(:first-child) {
+      margin-left: 1rem;
+    }
+  }
+  &-tabs {
+    display: grid;
+  }
 }
 
 .tab {
+  &-body:hover &-controls {
+    visibility: visible;
+  }
+
+  &-controls {
+    display: flex;
+    visibility: hidden;
+
+    > *:not(:first-child) {
+      margin-left: 4px;
+    }
+  }
+
   &-body {
     display: grid;
     align-items: center;
     padding: 0.25rem;
-    grid-template-columns: 1fr auto;
+    grid-template-columns: auto auto 1fr;
+    grid-gap: 4px;
 
     &:hover {
       cursor: pointer;
       background: var(--color-gray);
     }
+  }
+
+  &-favicon {
+    width: 16px;
+    height: 16px;
   }
 
   &-title {

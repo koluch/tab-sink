@@ -17,7 +17,7 @@ export function useStoredValue<T>(
   initial: T,
   serialize: (value: T) => StorageValue,
   deserialize: (object: StorageValue) => T,
-): [T, (newState: T) => Promise<void>] {
+): [T, (cb: (state: T) => T) => Promise<void>] {
   const [value, setValue] = useState<T>(initial);
 
   useEffect(() => {
@@ -28,7 +28,7 @@ export function useStoredValue<T>(
           const parsed = deserialize(item);
           setValue(parsed);
         } catch (e) {
-          console.log('Unable to parse last storage value');
+          console.error('Unable to parse last storage value');
         }
       }
     });
@@ -49,10 +49,20 @@ export function useStoredValue<T>(
 
   return [
     value,
-    (newState: T) => {
-      return browser.storage.local.set({
-        [key]: serialize(newState),
-      });
+    async (cb: (state: T) => T): Promise<void> => {
+      const data = await browser.storage.local.get([key]);
+      const item: StorageValue | null = data[key];
+      if (item != null) {
+        try {
+          const parsed = deserialize(item);
+          await browser.storage.local.set({
+            [key]: serialize(cb(parsed)),
+          });
+          return;
+        } catch (e) {
+          console.error('Unable to parse last storage value');
+        }
+      }
     },
   ];
 }

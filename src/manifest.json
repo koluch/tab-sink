@@ -5,12 +5,20 @@
   "version": "debug",
 
   "icons": {
-    "48": "/static/logo.svg"
+    "32": "/static/logo.svg"
   },
 
   "browser_action": {
     "browser_style": true,
-    "default_title": "Sink all tabs"
+    "default_icon": "static/logo.svg",
+    "default_title": "Sink all tabs",
+    "theme_icons": [
+      {
+        "light": "static/logo_light.svg",
+        "dark": "static/logo_dark.svg",
+        "size": 32
+      }
+    ]
   },
 
   "background": {
