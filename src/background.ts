@@ -5,6 +5,7 @@ import { TabItem } from './types';
 import { createStore } from './services/store';
 
 import StorageValue = browser.storage.StorageValue;
+import HistoryItem = browser.history.HistoryItem;
 
 const ICONS = {
   DARK: 'static/logo_dark.svg',
@@ -53,4 +54,10 @@ browser.browserAction.onClicked.addListener(() => {
       url: '/static/index.html',
     });
   })();
+});
+
+browser.history.onVisited.addListener((historyItem: HistoryItem) => {
+  if (historyItem.url == browser.extension.getURL('static/index.html')) {
+    browser.history.deleteUrl({ url: historyItem.url });
+  }
 });

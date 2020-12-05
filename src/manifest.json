@@ -25,5 +25,5 @@
     "scripts": ["background.js"]
   },
 
-  "permissions": ["storage", "tabs", "downloads", "<all_urls>"]
+  "permissions": ["storage", "tabs", "downloads", "history", "<all_urls>"]
 }
