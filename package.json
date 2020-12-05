@@ -12,9 +12,10 @@
     "build:copy-assets": "cp -R src/static src/manifest.json LICENSE build",
     "build:update-manifest": "VERSION=`node -p -e \"require('./package.json').version\"` && node scripts/update_manifest.js build/manifest.json $VERSION",
     "build:compile-sass": "sass src/index.scss build/index.css --no-source-map",
-    "build:compile-ts": "esbuild src/index.tsx --define:process.env.NODE_ENV='\"production\"' --bundle --outfile=build/bundle.js",
+    "build:compile-ts:index": "esbuild src/index.tsx --define:process.env.NODE_ENV='\"production\"' --bundle --outfile=build/index.js",
+    "build:compile-ts:background": "esbuild src/background.ts --define:process.env.NODE_ENV='\"production\"' --bundle --outfile=build/background.js",
     "build:pack": "cd build && VERSION=`node -p -e \"require('./manifest.json').version\"` && zip -r ../tab-sink-${VERSION}.zip ./*",
-    "build": "npm run all clean build:*",
+    "build": "npm run all clean build:**",
     "util:fix": "npx eslint --fix --ext ts,tsx ./src/"
   },
   "author": "Nikolai Mavrenkov",

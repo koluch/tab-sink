@@ -1,10 +1,8 @@
 import { h } from 'preact';
 import { useEffect } from 'preact/hooks';
-import { nanoid } from 'nanoid';
 
 import { TabItem } from '../types';
 import { useStoredValue } from '../services/store';
-import { closeTabs, getTabs } from '../services/browser';
 
 import Tab from './Tab';
 
@@ -32,33 +30,7 @@ export default function App(): preact.JSX.Element {
   );
 
   useEffect(() => {
-    async function doit() {
-      const browserTabs = (await getTabs()).filter((x) => {
-        if (x.pinned) {
-          return false;
-        }
-        const { url } = x;
-        if (url == null) {
-          return false;
-        }
-        if (url.startsWith('about:')) {
-          return false;
-        }
-        if (url.startsWith('moz-extension:') && x.active) {
-          return false;
-        }
-        return true;
-      });
-      const newTabItems: TabItem[] = browserTabs
-        .map((x) => ({
-          id: nanoid(),
-          url: x.url || '#',
-          title: x.title || 'no title',
-        }))
-        .reverse();
-      await setTabs((state) => [...newTabItems, ...state]);
-      await closeTabs(browserTabs.map(({ id }) => id as number));
-    }
+    async function doit() {}
     doit().catch((e) => console.error(e));
   }, []);
 

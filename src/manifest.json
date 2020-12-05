@@ -22,7 +22,7 @@
   },
 
   "background": {
-    "scripts": ["static/background.js"]
+    "scripts": ["background.js"]
   },
 
   "permissions": ["storage", "tabs", "downloads", "<all_urls>"]
