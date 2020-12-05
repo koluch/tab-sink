@@ -38,7 +38,14 @@ export default function App(): preact.JSX.Element {
           if (x.pinned) {
             return false;
           }
-          if (x.url != null && x.url.startsWith('moz-extension:') && x.active) {
+          const { url } = x;
+          if (url == null) {
+            return false;
+          }
+          if (url.startsWith('about:')) {
+            return false;
+          }
+          if (url.startsWith('moz-extension:') && x.active) {
             return false;
           }
           return true;
@@ -48,10 +55,7 @@ export default function App(): preact.JSX.Element {
           url: x.url || '#',
           title: x.title || 'no title',
         }));
-      await setTabs((state) => [
-        ...newTabs.filter(({ url }) => !url.startsWith('moz-extension:')).reverse(),
-        ...state,
-      ]);
+      await setTabs((state) => [...newTabs.reverse(), ...state]);
       await closeTabs(newTabs.map(({ id }) => id));
     }
     doit().catch((e) => console.error(e));
@@ -84,6 +88,7 @@ export default function App(): preact.JSX.Element {
         </button>
       </div>
       <div className="app-tabs">
+        {tabs.length === 0 && <div>No tabs yet</div>}
         {tabs.map((tab) => (
           <Tab
             key={tab.id}

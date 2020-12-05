@@ -5,7 +5,7 @@
   "version": "debug",
 
   "icons": {
-    "32": "/static/logo.svg"
+    "32": "static/logo.svg"
   },
 
   "browser_action": {
@@ -22,7 +22,7 @@
   },
 
   "background": {
-    "scripts": ["/static/background.js"]
+    "scripts": ["static/background.js"]
   },
 
   "permissions": ["storage", "tabs", "downloads", "<all_urls>"]

@@ -50,19 +50,18 @@ export function useStoredValue<T>(
   return [
     value,
     async (cb: (state: T) => T): Promise<void> => {
-      const data = await browser.storage.local.get([key]);
-      const item: StorageValue | null = data[key];
-      if (item != null) {
-        try {
-          const parsed = deserialize(item);
-          await browser.storage.local.set({
-            [key]: serialize(cb(parsed)),
-          });
-          return;
-        } catch (e) {
-          console.error('Unable to parse last storage value');
-        }
+      let parsed: T = initial;
+      try {
+        const data = await browser.storage.local.get([key]);
+        const item: StorageValue | null = data[key];
+        parsed = item != null ? deserialize(item) : initial;
+      } catch (e) {
+        console.error('Unable to parse last storage value');
       }
+      const serialized = serialize(cb(parsed));
+      await browser.storage.local.set({
+        [key]: serialized,
+      });
     },
   ];
 }
