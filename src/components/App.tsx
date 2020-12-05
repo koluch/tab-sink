@@ -1,5 +1,4 @@
 import { h } from 'preact';
-import { useEffect } from 'preact/hooks';
 
 import { TabItem } from '../types';
 import { useStoredValue } from '../services/store';
@@ -28,11 +27,6 @@ export default function App(): preact.JSX.Element {
     (x) => (x as unknown) as StorageValue,
     (x) => (x as unknown) as TabItem[],
   );
-
-  useEffect(() => {
-    async function doit() {}
-    doit().catch((e) => console.error(e));
-  }, []);
 
   return (
     <div className="app">

@@ -1,6 +1,12 @@
 import { nanoid } from 'nanoid';
 
-import { closeTabs, getTabs } from './services/browser';
+import {
+  activateTab,
+  closeTabs,
+  findExtensionTab,
+  getTabs,
+  openExtensionTab,
+} from './services/browser';
 import { TabItem } from './types';
 import { createStore } from './services/store';
 
@@ -24,6 +30,7 @@ const store = createStore<TabItem[]>(
 browser.browserAction.setIcon({ path: ICONS[theme] });
 browser.browserAction.onClicked.addListener(() => {
   (async function () {
+    // Collect open tabs and save them in store
     const browserTabs = (await getTabs()).filter((x) => {
       if (x.pinned) {
         return false;
@@ -47,12 +54,18 @@ browser.browserAction.onClicked.addListener(() => {
         title: x.title || 'no title',
       }))
       .reverse();
+
+    // Close tabs
     await store.set((state) => [...newTabItems, ...state]);
     await closeTabs(browserTabs.map(({ id }) => id as number));
 
-    await browser.tabs.create({
-      url: '/static/index.html',
-    });
+    // Open extension tab
+    const existedTab = await findExtensionTab();
+    if (existedTab) {
+      await activateTab(existedTab.id);
+    } else {
+      await openExtensionTab();
+    }
   })();
 });
 
