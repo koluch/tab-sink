@@ -1,11 +1,14 @@
 import { h } from 'preact';
 import { useEffect } from 'preact/hooks';
+import { nanoid } from 'nanoid';
 
 import { TabItem } from '../types';
 import { useStoredValue } from '../services/store';
 import { closeTabs, getTabs } from '../services/browser';
 
 import Tab from './Tab';
+
+import StorageValue = browser.storage.StorageValue;
 
 function download(filename: string, text: string): void {
   const element = document.createElement('a');
@@ -20,8 +23,6 @@ function download(filename: string, text: string): void {
   document.body.removeChild(element);
 }
 
-import StorageValue = browser.storage.StorageValue;
-
 export default function App(): preact.JSX.Element {
   const [tabs, setTabs] = useStoredValue<TabItem[]>(
     'tabs',
@@ -32,31 +33,31 @@ export default function App(): preact.JSX.Element {
 
   useEffect(() => {
     async function doit() {
-      const tabs1 = await getTabs();
-      const newTabs: TabItem[] = tabs1
-        .filter((x) => {
-          if (x.pinned) {
-            return false;
-          }
-          const { url } = x;
-          if (url == null) {
-            return false;
-          }
-          if (url.startsWith('about:')) {
-            return false;
-          }
-          if (url.startsWith('moz-extension:') && x.active) {
-            return false;
-          }
-          return true;
-        })
-        .map((x, i) => ({
-          id: x.id != null ? x.id : i,
+      const browserTabs = (await getTabs()).filter((x) => {
+        if (x.pinned) {
+          return false;
+        }
+        const { url } = x;
+        if (url == null) {
+          return false;
+        }
+        if (url.startsWith('about:')) {
+          return false;
+        }
+        if (url.startsWith('moz-extension:') && x.active) {
+          return false;
+        }
+        return true;
+      });
+      const newTabItems: TabItem[] = browserTabs
+        .map((x) => ({
+          id: nanoid(),
           url: x.url || '#',
           title: x.title || 'no title',
-        }));
-      await setTabs((state) => [...newTabs.reverse(), ...state]);
-      await closeTabs(newTabs.map(({ id }) => id));
+        }))
+        .reverse();
+      await setTabs((state) => [...newTabItems, ...state]);
+      await closeTabs(browserTabs.map(({ id }) => id as number));
     }
     doit().catch((e) => console.error(e));
   }, []);
