@@ -1,5 +1,5 @@
 import { h, render } from 'preact';
-import { TabItem } from './types';
+
 import App from './components/App';
 
 const rootEl = document.getElementById('app');

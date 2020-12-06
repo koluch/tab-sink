@@ -7,6 +7,7 @@
     "clean": "rm -rf ./build && rm -rf ./*.zip",
     "all": "npx run-s -l",
     "test:types": "tsc --noEmit",
+    "test:lint": "eslint --ext ts,tsx ./src/",
     "test": "npm run all test:*",
     "build:prepare": "mkdir -p build",
     "build:copy-assets": "cp -R src/static src/manifest.json LICENSE build",
