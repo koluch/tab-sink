@@ -1,0 +1,15 @@
+{
+  "presets": [
+    "@babel/react",
+    [
+      "@babel/env",
+      {
+        "modules": false,
+        "targets": {
+          "firefox": "80"
+        }
+      }
+    ]
+  ],
+  "plugins": ["@babel/plugin-proposal-optional-chaining"]
+}

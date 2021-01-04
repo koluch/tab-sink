@@ -1,12 +1,6 @@
 import { nanoid } from 'nanoid';
 
-import {
-  activateTab,
-  closeTabs,
-  findExtensionTab,
-  getTabs,
-  openExtensionTab,
-} from './services/browser';
+import browserApi from './services/browser';
 import { TabItem } from './types';
 import { createStore } from './services/store';
 
@@ -18,7 +12,7 @@ const ICONS = {
   LIGHT: 'static/logo_light.svg',
 };
 
-const theme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'DARK' : 'LIGHT';
+const theme = browserApi.getTheme();
 
 const store = createStore<TabItem[]>(
   'tabs',
@@ -31,7 +25,7 @@ browser.browserAction.setIcon({ path: ICONS[theme] });
 browser.browserAction.onClicked.addListener(() => {
   (async function () {
     // Collect open tabs and save them in store
-    const browserTabs = (await getTabs()).filter((x) => {
+    const browserTabs = (await browserApi.getTabs()).filter((x) => {
       if (x.pinned) {
         return false;
       }
@@ -55,22 +49,25 @@ browser.browserAction.onClicked.addListener(() => {
       }))
       .reverse();
 
-    // Close tabs
     await store.set((state) => [...newTabItems, ...state]);
-    await closeTabs(browserTabs.map(({ id }) => id as number));
+
+    // Close tabs
+    if (process.env.NODE_ENV !== 'development') {
+      await browserApi.closeTabs(browserTabs.map(({ id }) => id as number));
+    }
 
     // Open extension tab
-    const existedTab = await findExtensionTab();
+    const existedTab = await browserApi.findExtensionTab();
     if (existedTab) {
-      await activateTab(existedTab.id);
+      await browserApi.activateTab(existedTab.id);
     } else {
-      await openExtensionTab();
+      await browserApi.openExtensionTab();
     }
   })();
 });
 
 browser.history.onVisited.addListener((historyItem: HistoryItem) => {
-  if (historyItem.url == browser.extension.getURL('static/index.html')) {
+  if (historyItem.url == browser.extension.getURL('static/template.html')) {
     browser.history.deleteUrl({ url: historyItem.url });
   }
 });

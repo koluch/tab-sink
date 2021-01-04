@@ -1,0 +1,39 @@
+.tab {
+}
+
+.body:hover .controls {
+  visibility: visible;
+}
+
+.controls {
+  display: flex;
+  visibility: hidden;
+
+  > *:not(:first-child) {
+    margin-left: 4px;
+  }
+}
+
+.body {
+  display: grid;
+  align-items: center;
+  padding: 0.25rem;
+  grid-template-columns: auto auto 1fr;
+  grid-gap: 4px;
+
+  &:hover {
+    cursor: pointer;
+    background: var(--color-gray);
+  }
+}
+
+.favicon {
+  width: 16px;
+  height: 16px;
+}
+
+.title {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}

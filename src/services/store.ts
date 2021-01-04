@@ -1,7 +1,15 @@
 import { useEffect, useState } from 'preact/hooks';
 
 import StorageValue = browser.storage.StorageValue;
-import StorageChange = browser.storage.StorageChange;
+
+export type Value = StorageValue;
+
+export type ValueChange = {
+  oldValue?: any;
+  newValue?: any;
+};
+
+export type ValueChangeMap = { [field: string]: ValueChange };
 
 interface StoreListener<V> {
   (newValue: V): void;
@@ -16,12 +24,12 @@ interface Store<T> {
 export function createStore<T>(
   key: string,
   initial: T,
-  serialize: (value: T) => StorageValue,
-  deserialize: (object: StorageValue) => T,
+  serialize: (value: T) => Value,
+  deserialize: (object: Value) => T,
 ): Store<T> {
   const get = async () => {
     const data = await browser.storage.local.get([key]);
-    const item: StorageValue | null = data[key];
+    const item: Value | null = data[key];
     if (item != null) {
       try {
         return deserialize(item);
@@ -35,7 +43,7 @@ export function createStore<T>(
     let parsed: T = initial;
     try {
       const data = await browser.storage.local.get([key]);
-      const item: StorageValue | null = data[key];
+      const item: Value | null = data[key];
       parsed = item != null ? deserialize(item) : initial;
     } catch (e) {
       console.error('Unable to parse last storage value');
@@ -45,7 +53,7 @@ export function createStore<T>(
     });
   };
   const subscribe = (listener: StoreListener<T>): (() => void) => {
-    const storageListener = (changeData: { [key: string]: StorageChange }) => {
+    const storageListener = (changeData: ValueChangeMap) => {
       if (key in changeData) {
         const newValue = changeData[key].newValue;
         listener(newValue);
@@ -70,8 +78,8 @@ export function createStore<T>(
 export function useStoredValue<T>(
   key: string,
   initial: T,
-  serialize: (value: T) => StorageValue,
-  deserialize: (object: StorageValue) => T,
+  serialize: (value: T) => Value,
+  deserialize: (object: Value) => T,
 ): [T, (cb: (state: T) => T) => Promise<void>] {
   const store = createStore(key, initial, serialize, deserialize);
 

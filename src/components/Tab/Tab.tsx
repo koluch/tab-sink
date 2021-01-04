@@ -1,8 +1,9 @@
 import { h } from 'preact';
 
-import { TabItem } from '../types';
+import { TabItem } from '../../types';
+import { BumpIcon, CrossIcon } from '../icons';
 
-import { BumpIcon, CrossIcon } from './icons';
+import s from './Tab.module.scss';
 
 interface Props {
   tab: TabItem;
@@ -17,8 +18,8 @@ export default function Tab(props: Props): preact.JSX.Element {
   const favicon = `https://s2.googleusercontent.com/s2/favicons?domain_url=${tab.url}`;
 
   return (
-    <div title={tab.url} className="tab-body">
-      <div className="tab-controls">
+    <div title={tab.url} className={s.body}>
+      <div className={s.controls}>
         <div onClick={onBump}>
           <BumpIcon color="var(--color-gray-2)" />
         </div>
@@ -26,8 +27,8 @@ export default function Tab(props: Props): preact.JSX.Element {
           <CrossIcon color="var(--color-gray-2)" />
         </div>
       </div>
-      <img className="tab-favicon" src={favicon || ''} />
-      <div className="tab-title" onClick={onOpen}>
+      <img className={s.favicon} src={favicon || ''} />
+      <div className={s.title} onClick={onOpen}>
         {tab.title}
       </div>
     </div>

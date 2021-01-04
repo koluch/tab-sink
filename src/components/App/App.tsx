@@ -1,11 +1,11 @@
 import { h } from 'preact';
+import cn from 'clsx';
 
-import { TabItem } from '../types';
-import { useStoredValue } from '../services/store';
+import { TabItem } from '../../types';
+import { useStoredValue, Value } from '../../services/store';
+import Tab from '../Tab/Tab';
 
-import Tab from './Tab';
-
-import StorageValue = browser.storage.StorageValue;
+import s from './App.module.scss';
 
 function download(filename: string, text: string): void {
   const element = document.createElement('a');
@@ -24,13 +24,13 @@ export default function App(): preact.JSX.Element {
   const [tabs, setTabs] = useStoredValue<TabItem[]>(
     'tabs',
     [],
-    (x) => (x as unknown) as StorageValue,
+    (x) => (x as unknown) as Value,
     (x) => (x as unknown) as TabItem[],
   );
 
   return (
-    <div className="app">
-      <div className="app-header">
+    <div className={cn(s.root)}>
+      <div className={s.header}>
         <button
           onClick={() => {
             download('tab-sink-export.json', JSON.stringify(tabs, null, 2));
@@ -54,7 +54,7 @@ export default function App(): preact.JSX.Element {
           Import from JSON
         </button>
       </div>
-      <div className="app-tabs">
+      <div className={s.tabs}>
         {tabs.length === 0 && <div>No tabs yet</div>}
         {tabs.map((tab) => (
           <Tab
