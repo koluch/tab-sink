@@ -1,0 +1,16 @@
+/*
+  Typography
+ */
+$font-family: "Fira Code", "Open Sans", "San Francisco", "Segoe UI", "Ubuntu", sans-serif;
+
+@mixin display-20 {font-size: 36px; font-weight: 200}
+@mixin title-40 { font-size: 22px; font-weight: 300}
+@mixin title-30 { font-size: 22px; font-weight: 300}
+@mixin title-20 { font-size: 17px; font-weight: 500}
+@mixin title-10 { font-size: 13px; font-weight: 500}
+@mixin body-30 { font-size: 15px; font-weight: 40 0}
+@mixin body-20 { font-size: 15px; font-weight: 400}
+@mixin body-10 { font-size: 13px; font-weight: 400}
+@mixin caption-30 { font-size: 13px; font-weight: 400}
+@mixin caption-20 { font-size: 13px; font-weight: 400}
+@mixin caption-10 { font-size: 11px; font-weight: 400}
