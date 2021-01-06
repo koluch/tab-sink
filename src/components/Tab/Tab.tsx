@@ -21,10 +21,10 @@ export default function Tab(props: Props): preact.JSX.Element {
     <div title={tab.url} className={s.body}>
       <div className={s.controls}>
         <div onClick={onBump}>
-          <BumpIcon color="var(--color-gray-2)" />
+          <BumpIcon color="var(--icon-color)" />
         </div>
         <div onClick={onClose}>
-          <CrossIcon color="var(--color-gray-2)" />
+          <CrossIcon color="var(--icon-color)" />
         </div>
       </div>
       <img className={s.favicon} src={favicon || ''} />

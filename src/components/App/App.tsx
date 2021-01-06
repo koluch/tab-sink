@@ -4,6 +4,7 @@ import cn from 'clsx';
 import { TabItem } from '../../types';
 import { useStoredValue, Value } from '../../services/store';
 import Tab from '../Tab/Tab';
+import Button from '../kit/Button/Button';
 
 import s from './App.module.scss';
 
@@ -31,14 +32,14 @@ export default function App(): preact.JSX.Element {
   return (
     <div className={cn(s.root)}>
       <div className={s.header}>
-        <button
+        <Button
           onClick={() => {
             download('tab-sink-export.json', JSON.stringify(tabs, null, 2));
           }}
         >
           Export as JSON
-        </button>
-        <button
+        </Button>
+        <Button
           onClick={() => {
             const jsonText = window.prompt('JSON:');
             if (jsonText != null) {
@@ -52,7 +53,7 @@ export default function App(): preact.JSX.Element {
           }}
         >
           Import from JSON
-        </button>
+        </Button>
       </div>
       <div className={s.tabs}>
         {tabs.length === 0 && <div>No tabs yet</div>}

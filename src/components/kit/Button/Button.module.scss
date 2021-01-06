@@ -1,0 +1,42 @@
+@use "src/photon/typography" as typography;
+@use "src/photon/colors" as colors;
+
+.root {
+  background: var(--grey-90-a10);
+  color: var(--grey-90);
+  border: none;
+  height: 32px;
+  min-width: 132px;
+  padding: 0 8px;
+  font-size: 13px;
+
+  &:disabled {
+    pointer-events: none;
+    opacity: 0.4;
+  }
+
+  &:focus {
+    box-shadow: 0 0 0 1px #0a84ff inset, 0 0 0 1px #0a84ff, 0 0 0 4px rgba(10, 132, 255, 0.3);
+  }
+
+  &:hover {
+    background: #{colors.$grey-90-a20};
+  }
+
+  &:active {
+    background: #{colors.$grey-90-a30};
+  }
+
+  &.isPrimary {
+    background: #{colors.$blue-60};
+    color: #{colors.$white-100};
+
+    &:hover {
+      background: #{colors.$blue-70};
+    }
+
+    &:active {
+      background: #{colors.$blue-80};
+    }
+  }
+}

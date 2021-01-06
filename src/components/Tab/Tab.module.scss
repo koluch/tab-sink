@@ -1,3 +1,5 @@
+@use "src/photon/colors";
+
 .tab {
 }
 
@@ -23,7 +25,7 @@
 
   &:hover {
     cursor: pointer;
-    background: var(--color-gray);
+    background: #{colors.$grey-20};
   }
 }
 
