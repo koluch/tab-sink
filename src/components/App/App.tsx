@@ -1,5 +1,6 @@
-import { h } from 'preact';
+import { h, Fragment } from 'preact';
 import cn from 'clsx';
+import { useState } from 'preact/hooks';
 
 import { TabItem } from '../../types';
 import { useStoredValue, Value } from '../../services/store';
@@ -7,19 +8,8 @@ import Tab from '../Tab/Tab';
 import Button from '../kit/Button/Button';
 
 import s from './App.module.scss';
-
-function download(filename: string, text: string): void {
-  const element = document.createElement('a');
-  element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
-  element.setAttribute('download', filename);
-
-  element.style.display = 'none';
-  document.body.appendChild(element);
-
-  element.click();
-
-  document.body.removeChild(element);
-}
+import ExportDialog from './ExportDialog/ExportDialog';
+import ImportDialog from './ImportDialog/ImportDialog';
 
 export default function App(): preact.JSX.Element {
   const [tabs, setTabs] = useStoredValue<TabItem[]>(
@@ -29,54 +19,67 @@ export default function App(): preact.JSX.Element {
     (x) => (x as unknown) as TabItem[],
   );
 
+  const [isExportDialogShown, setExportDialogShown] = useState(false);
+  const [isImportDialogShown, setImportDialogShown] = useState(true);
+
   return (
-    <div className={cn(s.root)}>
-      <div className={s.header}>
-        <Button
-          onClick={() => {
-            download('tab-sink-export.json', JSON.stringify(tabs, null, 2));
-          }}
-        >
-          Export as JSON
-        </Button>
-        <Button
-          onClick={() => {
-            const jsonText = window.prompt('JSON:');
-            if (jsonText != null) {
-              try {
-                const json = JSON.parse(jsonText);
-                setTabs((state) => [...json, ...state]);
-              } catch (e) {
-                console.error(`Unable to parse tabs JSON`);
-              }
-            }
-          }}
-        >
-          Import from JSON
-        </Button>
-      </div>
-      <div className={s.tabs}>
-        {tabs.length === 0 && <div>No tabs yet</div>}
-        {tabs.map((tab) => (
-          <Tab
-            key={tab.id}
-            tab={tab}
-            onBump={() => {
-              setTabs((state) => [tab, ...state.filter(({ id }) => id !== tab.id)]);
+    <>
+      <ExportDialog
+        tabs={tabs}
+        isShown={isExportDialogShown}
+        onClose={() => {
+          setExportDialogShown(false);
+        }}
+      />
+      <ImportDialog
+        isShown={isImportDialogShown}
+        onImport={(imported) => {
+          setTabs((oldTabs) => [...oldTabs, ...imported]);
+        }}
+        onClose={() => {
+          setImportDialogShown(false);
+        }}
+      />
+      <div className={cn(s.root)}>
+        <div className={s.header}>
+          <Button
+            onClick={() => {
+              setExportDialogShown(true);
             }}
-            onClose={() => setTabs((state) => state.filter((x) => x.id !== tab.id))}
-            onOpen={() => {
-              browser.tabs
-                .create({
-                  url: tab.url,
-                })
-                .then(() => {
-                  return setTabs((state) => state.filter((x) => x.id !== tab.id));
-                });
+          >
+            Export as JSON
+          </Button>
+          <Button
+            onClick={() => {
+              setImportDialogShown(true);
             }}
-          />
-        ))}
+          >
+            Import from JSON
+          </Button>
+        </div>
+        <div className={s.tabs}>
+          {tabs.length === 0 && <div>No tabs yet</div>}
+          {tabs.map((tab) => (
+            <Tab
+              key={tab.id}
+              tab={tab}
+              onBump={() => {
+                setTabs((state) => [tab, ...state.filter(({ id }) => id !== tab.id)]);
+              }}
+              onClose={() => setTabs((state) => state.filter((x) => x.id !== tab.id))}
+              onOpen={() => {
+                browser.tabs
+                  .create({
+                    url: tab.url,
+                  })
+                  .then(() => {
+                    return setTabs((state) => state.filter((x) => x.id !== tab.id));
+                  });
+              }}
+            />
+          ))}
+        </div>
       </div>
-    </div>
+    </>
   );
 }

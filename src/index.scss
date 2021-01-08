@@ -2,6 +2,14 @@
 @use "photon/colors";
 @use './reset';
 
+html {
+  box-sizing: border-box;
+}
+
+*, *:before, *:after {
+  box-sizing: inherit;
+}
+
 body {
   --icon-color: #{colors.$grey-90-a20};
   font-family: #{typography.$font-family};

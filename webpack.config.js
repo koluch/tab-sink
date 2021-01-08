@@ -69,24 +69,7 @@ module.exports = {
         ],
       },
       {
-        test: /\.svg$/,
-        use: [
-          {
-            loader: '@svgr/webpack',
-            options: {
-              replaceAttrValues: { red: 'var(--color)' },
-            },
-          },
-          {
-            loader: 'file-loader',
-            options: {
-              emitFile: false,
-            },
-          },
-        ],
-      },
-      {
-        test: /\.(woff|woff2|eot|ttf|otf|jpg|png)$/,
+        test: /\.(woff|woff2|eot|ttf|otf|jpg|png|svg)$/,
         use: [
           {
             loader: 'file-loader',
