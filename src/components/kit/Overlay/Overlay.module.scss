@@ -1,0 +1,12 @@
+@use "src/photon/typography" as typography;
+@use "src/photon/colors" as colors;
+
+.root {
+  display: flex;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: #{colors.$grey-90-a60};
+}

@@ -1,0 +1,40 @@
+@use "src/photon/typography" as typography;
+@use "src/photon/colors" as colors;
+
+.root {
+  min-height: 32px;
+  border: none;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  padding: 4px;
+  grid-gap: 4px;
+
+  &.type-GENERIC {
+    background: colors.$grey-20;
+    color: colors.$grey-90;
+  }
+
+  &.type-SUCCESS {
+    background: colors.$green-50;
+    color: colors.$green-90;
+  }
+
+  &.type-WARNING {
+    background: colors.$yellow-50;
+    color: colors.$yellow-90;
+  }
+
+  &.type-ERROR {
+    background: colors.$red-60;
+    color: colors.$white-100;
+  }
+}
+
+.icon {
+  margin: 4px;
+}
+
+.message {
+  @include typography.body-10;
+}

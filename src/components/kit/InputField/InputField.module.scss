@@ -1,0 +1,21 @@
+@use "src/photon/typography" as typography;
+@use "src/photon/colors" as colors;
+
+.root {
+  display: flex;
+  flex-direction: column;
+}
+
+.label {
+  font-size: 0.833rem;
+  line-height: 1.4;
+  color: #{colors.$grey-90};
+  margin-bottom: 8px;
+}
+
+.input {
+  border-radius: 2px;
+  min-height: 32px;
+  padding: 2px 8px;
+  border: 1px solid #{colors.$grey-90-a20}
+}
