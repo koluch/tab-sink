@@ -41,11 +41,14 @@ browser.browserAction.onClicked.addListener(() => {
       }
       return true;
     });
+    const now = new Date();
     const newTabItems: TabItem[] = browserTabs
       .map((x) => ({
         id: nanoid(),
         url: x.url || '#',
         title: x.title || 'no title',
+        addedAt: now,
+        updatedAt: now,
       }))
       .reverse();
 

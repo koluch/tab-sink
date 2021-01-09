@@ -5,6 +5,7 @@ import { TabItem } from '../../../types';
 import Dialog from '../../kit/Dialog/Dialog';
 import InputField from '../../kit/InputField/InputField';
 import { useId } from '../../../helpers/hooks';
+import { ImportExportCodec } from '../helpers';
 
 interface Props {
   tabs: TabItem[];
@@ -20,7 +21,7 @@ export default function ExportDialog(props: Props): preact.JSX.Element {
 
   useEffect(() => {
     if (isShown) {
-      setExportJson(JSON.stringify(tabs, null, 2));
+      setExportJson(ImportExportCodec.encode(tabs));
     }
   }, [isShown]);
 

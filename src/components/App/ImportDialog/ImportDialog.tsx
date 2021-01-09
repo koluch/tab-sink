@@ -2,11 +2,12 @@ import { h } from 'preact';
 import { useEffect, useState } from 'preact/hooks';
 import * as Either from 'fp-ts/Either';
 
-import { TabItem, TabListCodec } from '../../../types';
+import { TabItem, TabList } from '../../../types';
 import Dialog from '../../kit/Dialog/Dialog';
 import InputField from '../../kit/InputField/InputField';
 import { useId } from '../../../helpers/hooks';
 import MessageBar from '../../kit/MessageBar/MessageBar';
+import { ImportExportCodec } from '../helpers';
 
 import s from './ImportDialog.module.scss';
 
@@ -78,14 +79,8 @@ export default function ImportDialog(props: Props): preact.JSX.Element {
   );
 }
 
-function parseJsonText(json: string): TabItem[] {
-  let asJson;
-  try {
-    asJson = JSON.parse(json);
-  } catch (e) {
-    throw new Error(`Please, supply valid JSON`);
-  }
-  const decoded = TabListCodec.decode(asJson);
+function parseJsonText(json: string): TabList {
+  const decoded = ImportExportCodec.decode(json);
   if (Either.isLeft(decoded)) {
     const [firstError, ...restErrors] = decoded.left;
     let errorText;
