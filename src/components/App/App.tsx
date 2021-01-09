@@ -1,36 +1,21 @@
 import { h, Fragment } from 'preact';
 import cn from 'clsx';
 import { useState } from 'preact/hooks';
-import { isLeft } from 'fp-ts/Either';
-import { PathReporter } from 'io-ts/PathReporter';
 
-import { TabItem, TabListCodec } from '../../types';
-import { useStoredValue, Value } from '../../services/store';
+import { TabItem } from '../../types';
+import { useStoreValue } from '../../services/store';
 import Tab from '../Tab/Tab';
 import Button from '../kit/Button/Button';
+import tabStore from '../../tabStore';
 
 import s from './App.module.scss';
 import ExportDialog from './ExportDialog/ExportDialog';
 import ImportDialog from './ImportDialog/ImportDialog';
 
+const STORE = tabStore();
+
 export default function App(): preact.JSX.Element {
-  const [tabs, setTabs] = useStoredValue<TabItem[]>(
-    'tabs',
-    [],
-    (x) => (x as unknown) as Value,
-    (x) => {
-      try {
-        const decoded = TabListCodec.decode(x as unknown);
-        if (isLeft(decoded)) {
-          throw new Error(PathReporter.report(decoded).join('; '));
-        }
-        return decoded.right;
-      } catch (e) {
-        console.error(`Unable to parse stored tab list. ${e.message}`);
-        return [];
-      }
-    },
-  );
+  const [tabs, setTabs] = useStoreValue<TabItem[]>(STORE);
 
   const [isExportDialogShown, setExportDialogShown] = useState(false);
   const [isImportDialogShown, setImportDialogShown] = useState(false);

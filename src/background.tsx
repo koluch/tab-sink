@@ -2,9 +2,8 @@ import { nanoid } from 'nanoid';
 
 import browserApi from './services/browser';
 import { TabItem } from './types';
-import { createStore } from './services/store';
+import tabStore from './tabStore';
 
-import StorageValue = browser.storage.StorageValue;
 import HistoryItem = browser.history.HistoryItem;
 
 const ICONS = {
@@ -14,12 +13,7 @@ const ICONS = {
 
 const theme = browserApi.getTheme();
 
-const store = createStore<TabItem[]>(
-  'tabs',
-  [],
-  (x) => (x as unknown) as StorageValue,
-  (x) => (x as unknown) as TabItem[],
-);
+const store = tabStore();
 
 browser.browserAction.setIcon({ path: ICONS[theme] });
 browser.browserAction.onClicked.addListener(() => {

@@ -15,7 +15,8 @@ interface StoreListener<V> {
   (newValue: V): void;
 }
 
-interface Store<T> {
+export interface Store<T> {
+  initial: T;
   set(cb: (state: T) => T): Promise<void>;
   get(): Promise<T>;
   subscribe(listener: StoreListener<T>): () => void;
@@ -69,26 +70,18 @@ export function createStore<T>(
     };
   };
   return {
+    initial,
     set,
     get,
     subscribe,
   };
 }
 
-export function useStoredValue<T>(
-  key: string,
-  initial: T,
-  serialize: (value: T) => Value,
-  deserialize: (object: Value) => T,
-): [T, (cb: (state: T) => T) => Promise<void>] {
-  const store = createStore(key, initial, serialize, deserialize);
-
-  const [value, setValue] = useState<T>(initial);
-
+export function useStoreValue<T>(store: Store<T>): [T, (cb: (state: T) => T) => Promise<void>] {
+  const [value, setValue] = useState<T>(store.initial);
   useEffect(() => {
     return store.subscribe(setValue);
   }, [store]);
-
   return [
     value,
     async (cb: (state: T) => T): Promise<void> => {
