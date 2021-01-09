@@ -11,6 +11,7 @@
     "test": "npm run all test:*",
     "build:webpack": "webpack",
     "build:update-manifest": "VERSION=`node -p -e \"require('./package.json').version\"` && node scripts/update_manifest.js build/manifest.json $VERSION",
+    "build:pack": "cd build && VERSION=`node -p -e \"require('./manifest.json').version\"` && zip -r ../tab-sink-${VERSION}.zip ./*",
     "build": "npm run all clean build:**",
     "start:webpack": "NODE_ENV=development webpack --watch",
     "start": "npm run all clean start:**",
