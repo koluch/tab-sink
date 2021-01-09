@@ -20,7 +20,7 @@ export default function App(): preact.JSX.Element {
   );
 
   const [isExportDialogShown, setExportDialogShown] = useState(false);
-  const [isImportDialogShown, setImportDialogShown] = useState(true);
+  const [isImportDialogShown, setImportDialogShown] = useState(false);
 
   return (
     <>
@@ -33,8 +33,11 @@ export default function App(): preact.JSX.Element {
       />
       <ImportDialog
         isShown={isImportDialogShown}
-        onImport={(imported) => {
-          setTabs((oldTabs) => [...oldTabs, ...imported]);
+        onReplace={(imported) => {
+          setTabs(() => imported);
+        }}
+        onAdd={(imported) => {
+          setTabs((oldTabs) => [...imported, ...oldTabs]);
         }}
         onClose={() => {
           setImportDialogShown(false);

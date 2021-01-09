@@ -12,12 +12,13 @@ import s from './ImportDialog.module.scss';
 
 interface Props {
   isShown: boolean;
-  onImport: (data: TabItem[]) => void;
+  onReplace: (data: TabItem[]) => void;
+  onAdd: (data: TabItem[]) => void;
   onClose: () => void;
 }
 
 export default function ImportDialog(props: Props): preact.JSX.Element {
-  const { isShown, onImport, onClose } = props;
+  const { isShown, onReplace, onAdd, onClose } = props;
 
   const inputId = useId();
   const [json, setJson] = useState('');
@@ -36,13 +37,25 @@ export default function ImportDialog(props: Props): preact.JSX.Element {
       onClose={onClose}
       buttons={[
         {
-          children: 'Import',
-          isPrimary: true,
+          children: 'Replace tab list',
           onClick: () => {
             setError(null);
             try {
               const data = parseJsonText(json);
-              onImport(data);
+              onReplace(data);
+              onClose();
+            } catch (e) {
+              setError(e.message);
+            }
+          },
+        },
+        {
+          children: 'Add tabs to tab list',
+          onClick: () => {
+            setError(null);
+            try {
+              const data = parseJsonText(json);
+              onAdd(data);
               onClose();
             } catch (e) {
               setError(e.message);
