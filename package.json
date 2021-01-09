@@ -14,12 +14,15 @@
     "build": "npm run all clean build:**",
     "start:webpack": "NODE_ENV=development webpack --watch",
     "start": "npm run all clean start:**",
-    "util:fix": "npx eslint --fix --ext ts,tsx ./src/"
+    "util:fix": "npx eslint --fix --ext ts,tsx ./src/",
+    "postinstall": "rm -rf ./node_modules/@types/webpack"
   },
   "author": "Nikolai Mavrenkov",
   "license": "MIT",
   "dependencies": {
     "clsx": "^1.1.1",
+    "fp-ts": "^2.9.3",
+    "io-ts": "^2.2.13",
     "nanoid": "^3.1.20",
     "photon-colors": "^3.3.2",
     "preact": "^10.5.7"

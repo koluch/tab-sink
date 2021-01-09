@@ -1,7 +1,8 @@
 import { h } from 'preact';
 import { useEffect, useState } from 'preact/hooks';
+import * as Either from 'fp-ts/Either';
 
-import { TabItem } from '../../../types';
+import { TabItem, TabListCodec } from '../../../types';
 import Dialog from '../../kit/Dialog/Dialog';
 import InputField from '../../kit/InputField/InputField';
 import { useId } from '../../../helpers/hooks';
@@ -40,7 +41,7 @@ export default function ImportDialog(props: Props): preact.JSX.Element {
           onClick: () => {
             setError(null);
             try {
-              const data = importJson(json);
+              const data = parseJsonText(json);
               onImport(data);
               onClose();
             } catch (e) {
@@ -51,20 +52,46 @@ export default function ImportDialog(props: Props): preact.JSX.Element {
       ]}
     >
       <div className={s.root}>
-        <InputField id={inputId} rows={10} label={'JSON'} value={json} onChange={setJson} />
+        <InputField
+          id={inputId}
+          rows={10}
+          label={'Exported JSON'}
+          value={json}
+          onChange={setJson}
+        />
         {error && <MessageBar type="ERROR">{error}</MessageBar>}
       </div>
     </Dialog>
   );
 }
 
-function importJson(jsonText: string): TabItem[] {
+function parseJsonText(json: string): TabItem[] {
+  let asJson;
   try {
-    const json = JSON.parse(jsonText);
-    // todo: validate
-    return json as TabItem[];
+    asJson = JSON.parse(json);
   } catch (e) {
-    console.error(e.message);
-    throw new Error(`Unable to parse JSON! ${e.message}`);
+    throw new Error(`Please, supply valid JSON`);
   }
+  const decoded = TabListCodec.decode(asJson);
+  if (Either.isLeft(decoded)) {
+    const [firstError, ...restErrors] = decoded.left;
+    let errorText;
+    if (firstError.message != null) {
+      errorText = firstError.message;
+    } else {
+      const path = firstError.context
+        .map(({ key }) => (/^\d+$/.test(key) ? `[${key}]` : key))
+        .join('/');
+      const lastContextEntry = firstError.context[firstError.context.length - 1];
+      const message = `expected ${lastContextEntry.type.name}, got ${JSON.stringify(
+        lastContextEntry.actual,
+      )}`;
+      errorText = path + ' - ' + message;
+    }
+    if (restErrors.length > 0) {
+      errorText += ` (and ${restErrors.length} more errors)`;
+    }
+    throw new Error(errorText);
+  }
+  return decoded.right;
 }
