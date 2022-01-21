@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "all": "npm run-s -l",
+    "all": "run-s -l",
     "clean": "rm -rf ./build && rm -rf ./*.zip",
     "test:types": "tsc --noEmit",
     "test:lint": "eslint --ext ts,tsx ./src/",
